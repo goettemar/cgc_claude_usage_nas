@@ -1,0 +1,11 @@
+services:
+  claude-usage:
+    build: .
+    container_name: cgc_claude_usage
+    restart: unless-stopped
+    ports:
+      - "7863:7863"
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cgc-claude-usage"
+version = "2.0.0"
+description = "Claude Pro-Plan & API Usage Dashboard (Gradio/Docker)"
+requires-python = ">=3.12"
+dependencies = [
+    "gradio>=5.0",
+    "requests>=2.31",
+    "plotly>=5.18",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
