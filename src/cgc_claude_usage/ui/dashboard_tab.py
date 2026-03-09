@@ -205,24 +205,14 @@ def _do_refresh(config: AppConfig) -> str:
     return _render_dashboard(result, now)
 
 
-def build_dashboard_tab(config: AppConfig) -> tuple[gr.Markdown, gr.Button, gr.Timer]:
-    """Build the dashboard tab. Returns (markdown, button, timer) for wiring."""
-    md = gr.Markdown("Lade Dashboard...")
+def build_dashboard_tab(config: AppConfig) -> tuple[gr.Markdown, gr.Button]:
+    """Build the dashboard tab. Returns (markdown, button) for wiring."""
+    md = gr.Markdown("Dashboard bereit — klicke **Aktualisieren** zum Laden.")
     btn = gr.Button("Aktualisieren", variant="primary")
-    timer = gr.Timer(value=config.auto_refresh_minutes * 60, active=True)
 
     def refresh():
         return _do_refresh(config)
 
     btn.click(fn=refresh, outputs=md)
-    timer.tick(fn=refresh, outputs=md)
 
-    # Deferred initial load via one-shot timer
-    init_timer = gr.Timer(value=1, active=True)
-
-    def init_load():
-        return _do_refresh(config), gr.Timer(active=False)
-
-    init_timer.tick(fn=init_load, outputs=[md, init_timer])
-
-    return md, btn, timer
+    return md, btn

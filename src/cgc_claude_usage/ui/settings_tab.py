@@ -47,12 +47,9 @@ def build_settings_tab(config: AppConfig) -> dict:
     )
 
     gr.Markdown("### Einstellungen")
-    refresh_interval = gr.Number(
-        label="Auto-Refresh Intervall (Minuten)",
-        value=config.auto_refresh_minutes,
-        minimum=1,
-        maximum=60,
-        precision=0,
+    gr.Markdown(
+        "*Auto-Refresh deaktiviert (Anthropic Rate-Limit). "
+        "Daten werden nur per Klick auf 'Aktualisieren' geladen.*"
     )
     retention_days = gr.Number(
         label="History Aufbewahrung (Tage)",
@@ -68,13 +65,12 @@ def build_settings_tab(config: AppConfig) -> dict:
 
     status = gr.Markdown("")
 
-    def save(sk, org, admin, openrouter, deepl, refresh, retention):
+    def save(sk, org, admin, openrouter, deepl, retention):
         config.session_key = sk.strip()
         config.org_uuid = org.strip()
         config.admin_api_key = admin.strip()
         config.openrouter_api_key = openrouter.strip()
         config.deepl_api_key = deepl.strip()
-        config.auto_refresh_minutes = int(refresh)
         config.retention_days = int(retention)
         config.save()
         return "Gespeichert."
@@ -103,7 +99,7 @@ def build_settings_tab(config: AppConfig) -> dict:
             return f"Fehler: {e}"
 
     inputs = [session_key, org_uuid, admin_key, openrouter_key, deepl_key,
-              refresh_interval, retention_days]
+              retention_days]
     btn_save.click(fn=save, inputs=inputs, outputs=status)
     btn_test.click(fn=test_connection, inputs=[session_key, org_uuid], outputs=status)
 
@@ -113,7 +109,6 @@ def build_settings_tab(config: AppConfig) -> dict:
         "admin_key": admin_key,
         "openrouter_key": openrouter_key,
         "deepl_key": deepl_key,
-        "refresh_interval": refresh_interval,
         "retention_days": retention_days,
         "status": status,
     }
